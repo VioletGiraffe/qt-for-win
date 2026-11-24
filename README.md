@@ -29,6 +29,7 @@ pwsh pack_qt_kit.ps1 -QtDir C:\Qt\6.11.2\msvc2022_64 -Modules core,gui,widgets,s
 - A plugin is included only when every Qt DLL it imports belongs to a kept module.
 - The run fails if a kept binary imports a Qt DLL outside the kept modules, and names which module to add.
 - The script prints the archive's size and SHA-256. `-NoArchive` stops after the checks and keeps the staging folder for inspection.
+- The kit is staged in a folder next to the archive, deleted after a successful run and kept after a failed one.
 
 ## Packing the sources
 

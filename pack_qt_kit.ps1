@@ -146,7 +146,9 @@ if (-not $OutFile) { $OutFile = "qt-$version-$kitName.7z" }
 $OutFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutFile)
 if (-not $NoArchive -and (Test-Path $OutFile)) { throw "$OutFile already exists" }
 
-$staging = Join-Path ([IO.Path]::GetTempPath()) "qt-kit-$version-$kitName-$([guid]::NewGuid().ToString('N').Substring(0, 8))"
+# Next to the archive; deleted only after a successful archive, so a failed or -NoArchive run leaves it for inspection
+$staging = Join-Path (Split-Path $OutFile) "qt-$version-$kitName-staging"
+if (Test-Path $staging) { throw "$staging already exists: delete it after inspecting it" }
 
 function Copy-KitItem([string] $relative) {
 	$destination = Join-Path $staging $relative

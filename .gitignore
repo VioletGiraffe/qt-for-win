@@ -1,1 +1,5 @@
 *.7z
+qt-*-staging/
+qt-*-work/
+qt-*-src-files.txt
+qt-*-release-notes.md

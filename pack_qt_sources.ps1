@@ -100,7 +100,8 @@ foreach ($folder in $keptFolders) {
 "Qt $version sources, repos: $($repos -join ' ')"
 "Selected: {0:N0} files, {1:N0} MB" -f $selected.Count, ($selectedBytes / 1MB)
 
-$listFile = Join-Path ([IO.Path]::GetTempPath()) "qt-$version-src-$([guid]::NewGuid().ToString('N').Substring(0, 8)).txt"
+# Next to the archive; deleted only after a successful archive
+$listFile = Join-Path (Split-Path $OutFile) "qt-$version-src-files.txt"
 [IO.File]::WriteAllLines($listFile, $selected)
 if ($NoArchive) {
 	"File list kept: $listFile"
