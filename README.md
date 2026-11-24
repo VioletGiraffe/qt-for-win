@@ -40,6 +40,12 @@ pwsh pack_qt_sources.ps1 -SourceDir C:\Qt\6.12.1\Src
 
 The script prints the archive's size and SHA-256. `-NoArchive` stops after the selection and keeps the file list for inspection.
 
+## Publishing a release
+
+```powershell
+pwsh publish_release.ps1 -QtRoot C:\Qt\6.12.1 [-OutDir C:\test\release]
+```
+
 ## Using a kit in CI
 
 The archive has the kit at its root: extract it into an empty folder and set `QT_ROOT_DIR` to that folder.
