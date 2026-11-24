@@ -17,7 +17,7 @@ $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
 # The modules of the published kit, as in QT +=
-$kitModules = @('core', 'gui', 'widgets', 'svg', 'network', 'multimedia', 'multimediawidgets')
+$kitModules = @('core', 'gui', 'widgets', 'svg', 'network', 'multimedia', 'multimediawidgets', 'core5compat', 'testlib')
 
 $QtRoot = (Resolve-Path $QtRoot).Path
 $OutDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutDir)

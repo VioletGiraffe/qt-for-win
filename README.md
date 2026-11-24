@@ -54,13 +54,11 @@ The archive has the kit at its root: extract it into an empty folder and set `QT
 ```yaml
 - name: Windows - install Qt
   shell: pwsh
-  env:
-    GH_TOKEN: ${{ github.token }}
   run: |
-    $archive = 'qt-6.11.2-msvc2022_64.7z'
-    gh release download <tag> --repo VioletGiraffe/qt-for-win --pattern $archive
-    if ((Get-FileHash $archive -Algorithm SHA256).Hash -ne '<sha-256>') { throw "$archive does not match its checksum" }
+    $archive = Join-Path $env:RUNNER_TEMP 'qt.7z'
+    Invoke-WebRequest 'https://github.com/VioletGiraffe/qt-for-win/releases/download/6.12.1/qt-6.12.1-msvc2022_64.7z' -OutFile $archive
     7z x $archive "-o$env:RUNNER_TEMP\Qt" | Out-Null
+    if ($LASTEXITCODE) { throw "7z failed with exit code $LASTEXITCODE" }
     "QT_ROOT_DIR=$env:RUNNER_TEMP\Qt" >> $env:GITHUB_ENV
     "$env:RUNNER_TEMP\Qt\bin" >> $env:GITHUB_PATH
 ```
