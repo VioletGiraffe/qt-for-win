@@ -19,6 +19,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+. (Join-Path $PSScriptRoot 'release_archive.ps1')
 
 # pwsh -File passes "a,b" as one string
 $Modules = @($Modules -split '[,\s]+' | Where-Object { $_ })
@@ -141,8 +142,8 @@ while ($true) {
 
 $version = (& $qmake -query QT_VERSION).Trim()
 $kitName = Split-Path $QtDir -Leaf
-if (-not $OutFile) { $OutFile = Join-Path (Get-Location) "qt-$version-$kitName.7z" }
-$OutFile = [IO.Path]::GetFullPath($OutFile)
+if (-not $OutFile) { $OutFile = "qt-$version-$kitName.7z" }
+$OutFile = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutFile)
 if (-not $NoArchive -and (Test-Path $OutFile)) { throw "$OutFile already exists" }
 
 $staging = Join-Path ([IO.Path]::GetTempPath()) "qt-kit-$version-$kitName-$([guid]::NewGuid().ToString('N').Substring(0, 8))"
@@ -187,11 +188,5 @@ if ($NoArchive) {
 	return
 }
 
-$sevenZip = Get-Command 7z.exe -ErrorAction SilentlyContinue
-$sevenZip = if ($sevenZip) { $sevenZip.Source } else { Join-Path $env:ProgramFiles '7-Zip\7z.exe' }
-& $sevenZip a -t7z -mx=7 -mmt=on $OutFile (Join-Path $staging '*') | Out-Null
-if ($LASTEXITCODE) { throw "7-Zip failed with exit code $LASTEXITCODE" }
+New-ReleaseArchive $OutFile $staging '*'
 Remove-Item $staging -Recurse -Force
-
-"Archive: $OutFile, {0:N0} MB" -f ((Get-Item $OutFile).Length / 1MB)
-"SHA-256: $((Get-FileHash $OutFile -Algorithm SHA256).Hash.ToLowerInvariant())"

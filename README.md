@@ -16,7 +16,7 @@ designer and help tools, translations and documentation are left out.
 ## License
 
 - The Qt binaries are licensed by The Qt Company under the GNU LGPL v3 or the GNU GPL, depending on the component; the Qt sources state the terms of each file.
-- Each archive carries the GPL v3 and LGPL v3 texts as `LICENSE-Qt.txt`.
+- Each kit archive carries the GPL v3 and LGPL v3 texts as `LICENSE-Qt.txt`; the source archive keeps the license files of the Qt sources.
 - The corresponding source code of each Qt release is available from the Qt Project:
   https://download.qt.io/official_releases/qt/ (the `single` folder of each version holds the full source archive).
 
@@ -25,13 +25,23 @@ designer and help tools, translations and documentation are left out.
 Requires PowerShell 7, the MSVC build tools (for `dumpbin`) and 7-Zip. The kit must come from the Qt installer, which keeps the license texts in `<Qt root>\Licenses`; otherwise pass `-LicenseFile`.
 
 ```powershell
-pwsh pack_qt_kit.ps1 -QtDir C:\Qt\6.11.2\msvc2022_64 -Modules core,gui,widgets,svg,network
+pwsh pack_qt_kit.ps1 -QtDir C:\Qt\6.11.2\msvc2022_64 -Modules core,gui,widgets,svg,network,multimedia,multimediawidgets
 ```
 
 - `-Modules` takes qmake module names, as in `QT +=`. Dependencies and each module's `_private` twin are added from the kit's own module definitions.
 - A plugin is kept only when every Qt DLL it imports belongs to a kept module.
 - The run fails if a kept binary imports a Qt DLL outside the kept modules, and names the module to add.
 - The script prints the archive's size and SHA-256. `-NoArchive` stops after the checks and keeps the staging folder for inspection.
+
+## Packing the sources
+
+Requires PowerShell 7 and 7-Zip, and the Sources component of the Qt installer.
+
+```powershell
+pwsh pack_qt_sources.ps1 -SourceDir C:\Qt\6.12.1\Src
+```
+
+The script prints the archive's size and SHA-256. `-NoArchive` stops after the selection and keeps the file list for inspection.
 
 ## Using a kit in CI
 
